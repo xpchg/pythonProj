@@ -61,7 +61,7 @@ class spiderdb:
 	def query(self, sql):
 	
 		""" Execute SQL statement """
-	
+		
 		return self.cursor.execute(sql)
 
 
@@ -72,8 +72,11 @@ class spiderdb:
 		sql = "insert into %s (bookname, authorinfo, pubinfo, rating) \
 			values('%s', '%s', '%s', '%s')" %(table, title, authorinfo,
 			pubinfo, rating)
-		self.cursor.execute(sql)
-		self.conn.commit()
+		try:
+			self.cursor.execute(sql)
+			self.conn.commit()
+		except Exception, e:
+			sys.exit()
 	
 
 	def __del__(self):
@@ -134,5 +137,7 @@ if __name__ == '__main__':
 	do_spider(book_lists)
 
 	f = open(file_name, 'w')
+	if f is None: 
+		sys.exit()
 	f.write(file_content)
 	f.close()
